@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from blog.database import engine
 from blog.models import Base
-from blog.routers import auth,home
+from blog.routers import auth,user
 
 app = FastAPI(title="Blog API")
 
@@ -17,8 +17,6 @@ app = FastAPI()
 
 Base.metadata.create_all(engine)
 
-app.include_router(auth.router,tags=["Auth"])
-app.include_router(home.router)
 
 @app.get("/")
 async def root():
@@ -28,3 +26,8 @@ async def root():
         "docs_url": "/docs",
         "redoc_url": "/redoc"
     }
+    
+    
+    
+app.include_router(auth.router)
+app.include_router(user.router)

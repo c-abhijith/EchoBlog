@@ -7,10 +7,7 @@ from blog.models import User
 
 security = HTTPBearer()
 
-async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db)
-) -> User:
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security),db: Session = Depends(get_db)) -> User:
     try:
 
         payload = verify_token(credentials.credentials, "access")
