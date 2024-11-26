@@ -12,10 +12,10 @@ async def get_current_user(
     db: Session = Depends(get_db)
 ) -> User:
     try:
-        # Verify the access token
+
         payload = verify_token(credentials.credentials, "access")
         
-        # Get user from database
+    
         user = db.query(User).filter(User.username == payload["sub"]).first()
         if not user:
             raise HTTPException(
