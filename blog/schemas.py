@@ -1,16 +1,27 @@
-from pydantic import BaseModel, Field, constr
-import re
+from pydantic import BaseModel, Field
+from blog.models import UserRole
+from typing import Optional
 
 class UserCreate(BaseModel):
-    username: constr(min_length=3, max_length=50)
-    phonenumber: str = Field(..., regex=r"^\+?[1-9]\d{1,14}$")  # E.164 format
-    password: constr(min_length=8, regex=r"(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}") 
+    username: str
+    phonenumber: str
+    password: str
+    role: str = "user"
 
-    class Config:
-        schema_extra = {
-            "example": {
-                "username": "john_doe",
-                "phonenumber": "+1234567890",
-                "password": "Secure@1234",
-            }
-        }
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+
+class TokenData(BaseModel):
+    username: str | None = None
+    user_id: str | None = None
+    role: str | None = None
+    token_type: str | None = None
+
+class RefreshToken(BaseModel):
+    refresh_token: str
