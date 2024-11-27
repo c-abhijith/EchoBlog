@@ -1,19 +1,19 @@
 # Blog API
 
-A FastAPI-based RESTful API for a blogging platform with authentication, authorization, and social features.
+A FastAPI-based RESTful API for a blogging platform with phone OTP authentication and social features.
 
 ## Features
 
-- User Authentication with Phone OTP
+- Phone OTP Authentication
 - JWT Authentication (Access & Refresh Tokens)
 - Role-based Authorization (Admin/User)
-- User Management
+- User Management with Social Links
 - Blog Posts with Image Upload
 - Comments System
 - Like/Unlike System for Posts and Comments
 - User Following System
-- Protected Routes
 - Cloudinary Integration for Image Storage
+- Twilio Integration for OTP
 
 ## Tech Stack
 
