@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from blog.database import engine
 from blog.models import Base
-from blog.routers import auth,user
+from blog.routers import auth,user,comment,like
 
 app = FastAPI(title="Blog API")
 
@@ -31,3 +31,5 @@ async def root():
     
 app.include_router(auth.router)
 app.include_router(user.router)
+app.include_router(comment.router)
+app.include_router(like.router)
