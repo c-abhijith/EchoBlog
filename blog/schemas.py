@@ -69,3 +69,9 @@ class UserUpdate(BaseModel):
     twitter_url: Optional[str] = None
     instagram_url: Optional[str] = None
     linkedin_url: Optional[str] = None
+
+# class UserBase(BaseModel):
+#     followers: list[UUID]
+#     following: list[UUID]
+#     verified: bool
+#     profile_image_url: Optional[str] = None  

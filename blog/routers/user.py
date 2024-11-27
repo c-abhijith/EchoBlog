@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from blog.dependencies import get_current_user
 from blog.models import User
 from typing import List
-from blog.schemas import UserBase,UserUpdate
+from blog.schemas import UserBase,UserUpdate,SuccessResponse
 from sqlalchemy.orm import Session
 from blog.database import get_db
 from blog.repository.error_response import *
@@ -78,3 +78,39 @@ async def get_user_update(user_update: UserUpdate,db:Session=Depends(get_db),cur
     except Exception as e:
         raise_error(e)
 
+
+@router.patch('/follow',status_code=status.HTTP_200_OK,response_model=SuccessResponse)
+def follow(follow_id:UUID,db:Session=Depends(get_db),current_user: User = Depends(get_current_user)):
+    try:
+        follow_user = db. query(User).filter(User.id==follow_id).first()
+        user = db. query(User).filter(User.id==current_user.id).first()
+        if not follow_user:
+            raise_404()
+        if not user:
+            raise_404()
+            
+        if follow_user.id == user.id:
+            raise_400("you cant follow your self")
+        
+        if follow_id not in user.following:
+            user.following.append(follow_id)
+            follow_user.followers.append(current_user.id)
+            
+        else:
+            user.following.remove(follow_id)
+            follow_user.followers.remove(current_user.id)
+           
+        db.commit()
+        db.refresh(user)
+        db.refresh(follow_user)
+        return SuccessResponse(
+        message="Followed user successfully.",
+        data={
+            "user_id": str(user.id),
+            "following_count": len(user.following),
+            "followers_count": len(user.followers)
+        }
+    )
+    except Exception as e:
+        raise_error(e)
+        

@@ -4,10 +4,10 @@ from jose import JWTError, jwt
 from typing import Optional, Dict
 from fastapi import HTTPException, status
 
-# JWT settings
+
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 REFRESH_TOKEN_EXPIRE_DAYS = 7
-SECRET_KEY = "your-secret-key-here"  # Move this to .env
+SECRET_KEY = "77472dbf527152664d3b11cdafb78775"  
 ALGORITHM = "HS256"
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
