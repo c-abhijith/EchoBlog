@@ -1,11 +1,9 @@
-from fastapi import APIRouter, HTTPException, Depends, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import APIRouter,Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from blog.database import get_db
 from blog.models import User
-from blog.schemas import UserCreate, UserLogin, Token, RefreshToken,SuccessResponse
-from blog.utils import (get_password_hash, 
-    verify_password, 
+from blog.schemas import UserCreate, UserLogin, Token, RefreshToken,SuccessResponse,UserOTP
+from blog.utils import ( verify_password, 
     create_access_token, 
     create_refresh_token,
     verify_token
@@ -29,6 +27,53 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     except Exception as e:
         db.rollback()
         raise_error(e)
+
+@router.post("/verify_otp", status_code=status.HTTP_200_OK)
+def verify_otp(user: UserOTP, db: Session = Depends(get_db)):
+    try:
+        db_user = db.query(User).filter(User.username == user.username).first()
+        print(db.query(User).all())
+        if not db_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail={"status": "error", "message": "User not found"}
+            )
+            
+        if not db_user.otp:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail={"status": "error", "message": "No OTP found for this user"}
+            )
+            
+        if db_user.otp != user.otp:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail={"status": "error", "message": "Invalid OTP"}
+            )
+        
+        db_user.verified = True
+        db_user.otp = None
+        db.commit()
+
+        return {
+            "status": "success",
+            "message": "OTP verified successfully"
+        }
+    
+    except HTTPException as he:
+        db.rollback()
+        raise he
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail={
+                "status": "error",
+                "message": "An unexpected error occurred",
+                "error": str(e)
+            }
+        )
+    
 
 @router.post("/login", response_model=Token)
 async def login(user: UserLogin, db: Session = Depends(get_db)):

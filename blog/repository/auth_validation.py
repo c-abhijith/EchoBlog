@@ -2,8 +2,10 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from blog.models import User, UserRole
 from blog.schemas import UserCreate
-from blog.utils import get_password_hash
+from blog.utils import get_password_hash,send_otp
+from datetime import datetime, timedelta
 import uuid
+
 
 def signup_validation(user: UserCreate, db: Session):
     if db.query(User).filter(User.username == user.username).first():
@@ -34,7 +36,7 @@ def signup_validation(user: UserCreate, db: Session):
                 "field": "role"
             }
         )
-
+    
     try:
         new_user = User(
             id=uuid.uuid4(),
@@ -43,7 +45,9 @@ def signup_validation(user: UserCreate, db: Session):
             password=get_password_hash(user.password),
             role=user.role,
             followers=[],
-            following=[]
+            following=[],
+            otp=send_otp(user.phonenumber),
+            otp_expiry = datetime.utcnow() + timedelta(minutes=5) 
         )
         return new_user
     except Exception as e:

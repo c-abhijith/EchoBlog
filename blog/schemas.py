@@ -5,6 +5,9 @@ from uuid import UUID
 from typing import Any
 
 
+class UserOTP(BaseModel):
+    username: str
+    otp: str 
 
 class SuccessResponse(BaseModel):
     message: str
@@ -12,6 +15,8 @@ class SuccessResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        
+
         
 class UserCreate(BaseModel):
     username: str
