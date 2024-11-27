@@ -1,17 +1,19 @@
 # Blog API
 
-A FastAPI-based RESTful API for a blogging platform with authentication and authorization.
+A FastAPI-based RESTful API for a blogging platform with authentication, authorization, and social features.
 
 ## Features
 
-- User Authentication (JWT with Access & Refresh Tokens)
+- User Authentication with Phone OTP
+- JWT Authentication (Access & Refresh Tokens)
 - Role-based Authorization (Admin/User)
 - User Management
-- Blog Posts
-- Comments
-- Likes
+- Blog Posts with Image Upload
+- Comments System
+- Like/Unlike System for Posts and Comments
 - User Following System
 - Protected Routes
+- Cloudinary Integration for Image Storage
 
 ## Tech Stack
 
@@ -20,6 +22,8 @@ A FastAPI-based RESTful API for a blogging platform with authentication and auth
 - SQLAlchemy
 - Pydantic
 - JWT Authentication
+- Cloudinary
+- Twilio
 - Python 3.10+
 
 ## Project Structure
